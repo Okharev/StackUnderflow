@@ -1,27 +1,62 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.html import format_html
+from mptt.models import MPTTModel, TreeForeignKey
 
 
-# Create your models here.
+class Category(models.Model):
+    name = models.CharField(max_length=20)
+    slug = models.SlugField(unique=True)
+    description = models.TextField()
+    url = models.URLField()
+    hexcolor = models.CharField(max_length=7, default="ffffff")
+
+    class Meta:
+        verbose_name_plural = "Categories"
+
+    @property
+    def colored_name(self):
+        return format_html(
+            f'<span style="background-color: #{self.hexcolor};">{self.name}</span>'
+        )
+
+    def __str__(self):
+        return self.slug
+
+
 class Thread(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.TextField()
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    tags = models.ManyToManyField('Tag', through="Tagging")
+    categories = models.ManyToManyField(
+        Category, through="Categorisation", related_name="cat"
+    )
+
+    @property
+    def post_count(self):
+        return Post.objects.filter(thread=self).count()
 
     def __str__(self):
-        return f"Thread by {self.author}"
+        return f"Thread {self.title} by {self.author}"
 
 
-class Post(models.Model):
+class Post(MPTTModel):
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
+    parent = TreeForeignKey(
+        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="children"
+    )
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (("parent", "thread"),)
+
+    class MPTTMeta:
+        order_insertion_by = ["created_at"]
 
     def __str__(self):
         return f"Post by {self.author} for Thread {self.thread}"
@@ -36,16 +71,6 @@ class Karma(models.Model):
         return f"Karma is {self.karma} by {self.author} for Post {self.post}"
 
 
-class Tag(models.Model):
-    tag = models.CharField(max_length=50)
-
-    def __str__(self):
-        return f"Tag {self.tag}"
-
-
-class Tagging(models.Model):
-    threads = models.ForeignKey('Thread', on_delete=models.CASCADE)
-    taggings = models.ForeignKey('Tag', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"nb threads {self.threads}"
+class Categorisation(models.Model):
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)

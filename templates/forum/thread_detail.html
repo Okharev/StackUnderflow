@@ -1,0 +1,11 @@
+{% extends 'forum/base.html' %}
+
+{% block content %}
+
+<h1>{{ thread.title }}</h1>
+<ul>
+    <li>{{ thread.content }}</li>
+    <li>{{ thread.created_at|date }}</li>
+</ul>
+
+{% endblock %}
