@@ -1,4 +1,6 @@
+import random
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.html import format_html
@@ -11,7 +13,10 @@ class Category(models.Model):
     description = models.TextField()
     url = models.URLField()
     hexcolor = models.CharField(
-        max_length=7, default="ffffff", help_text="The color hex code without the '#'"
+        max_length=7,
+        default="ffffff",
+        help_text="The color hex code without the '#'",
+        validators=[MinValueValidator("00000"), MaxValueValidator("ffffff")],
     )
 
     class Meta:
@@ -22,6 +27,10 @@ class Category(models.Model):
         return format_html(
             f'<span style="background-color: #{self.hexcolor};">{self.name}</span>'
         )
+
+    @property
+    def rand_color(self):
+        return "{:06x}".format(random.randint(0, 0xFFFFFF))
 
     def __str__(self):
         return self.slug

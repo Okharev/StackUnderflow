@@ -6,6 +6,7 @@
 <ul>
     <li>{{ thread.content }}</li>
     <li>{{ thread.created_at|date }}</li>
+    <li><a href="{% url 'thread-delete' thread.id %}">delete</a></li>
 </ul>
 
 {% endblock %}

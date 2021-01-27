@@ -2,21 +2,23 @@
 
 {% block content %}
 
-<h1>Threads</h1>
-<ul>
-{% for thread in thread_list %}
-    <li>{{ thread.created_at|date }} - {{ thread.title }} - {{ thread.post_count }} <a href="{{ thread.get_absolute_url }}">>></a></li>
+    <h1>Threads</h1>
     <ul>
-    {% for category in thread.categories.all %}
-        <li>{{ category.colored_name }}</li>
-    {% endfor %}
-    </ul>
-{% empty %}
-    <li>No Threads yet.</li>
-{% endfor %}
+        {% for thread in thread_list %}
+            <li>{{ thread.created_at|date }} - {{ thread.title }} - {{ thread.post_count }} <a
+                    href="{% url 'thread-detail' thread.id %}">>>></a></li>
+            <ul>
+                {% for category in thread.categories.all %}
+                    <li>{{ category.colored_name }}</li>
 
-{% if is_paginated %}
-        <div class="pagination">
+                {% endfor %}
+            </ul>
+        {% empty %}
+            <li>No Threads yet.</li>
+        {% endfor %}
+
+        {% if is_paginated %}
+            <div class="pagination">
             <span class="page-links">
                 {% if page_obj.has_previous %}
                     <a href="?page=1">&laquo; first</a>
@@ -30,8 +32,8 @@
                     <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
                 {% endif %}
             </span>
-        </div>
-    {% endif %}
-</ul>
+            </div>
+        {% endif %}
+    </ul>
 
 {% endblock %}
