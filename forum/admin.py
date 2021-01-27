@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import *
 from mptt.admin import MPTTModelAdmin
+
+from .models import Post, Category, Thread
 
 
 class CategoryAdmin(admin.ModelAdmin):

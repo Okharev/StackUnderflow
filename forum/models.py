@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+from django.urls import reverse
 from django.utils.html import format_html
 from mptt.models import MPTTModel, TreeForeignKey
 
@@ -9,7 +10,9 @@ class Category(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField()
     url = models.URLField()
-    hexcolor = models.CharField(max_length=7, default="ffffff")
+    hexcolor = models.CharField(
+        max_length=7, default="ffffff", help_text="The color hex code without the '#'"
+    )
 
     class Meta:
         verbose_name_plural = "Categories"
@@ -25,7 +28,9 @@ class Category(models.Model):
 
 
 class Thread(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, help_text="The thread creator"
+    )
     title = models.TextField()
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -37,6 +42,9 @@ class Thread(models.Model):
     @property
     def post_count(self):
         return Post.objects.filter(thread=self).count()
+
+    def get_absolute_url(self):
+        return reverse("thread-detail", kwargs={"pk": self.pk})
 
     def __str__(self):
         return f"Thread {self.title} by {self.author}"

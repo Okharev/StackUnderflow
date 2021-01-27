@@ -1,5 +1,6 @@
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.views.generic import CreateView, ListView, DetailView
+
 from forum.models import Thread
 
 
@@ -14,5 +15,11 @@ class ThreadDetailView(DetailView):
 
 class ThreadCreateView(CreateView):
     model = Thread
-    fields = ["author", "title", "content", "categories"]
-    success_url = reverse_lazy("thread-list")
+    fields = ["title", "content", "categories"]
+
+    def get_success_url(self):
+        return reverse("thread-detail", args=(self.object.id,))
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
