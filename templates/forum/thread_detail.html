@@ -7,6 +7,23 @@
     <li>{{ thread.content }}</li>
     <li>{{ thread.created_at|date }}</li>
     <li><a href="{% url 'thread-delete' thread.id %}">delete</a></li>
+
+        <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+
+
+    {% for post in thread.get_posts %}
+
+        {% include 'forum/post_detail.html' %}
+
+        {% empty %}
+
+        <h3>No Posts yet.</h3>
+
+    {% endfor %}
+
 </ul>
 
 {% endblock %}
