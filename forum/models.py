@@ -1,8 +1,9 @@
 import random
+
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.urls import reverse
 from django.utils.html import format_html
 from mptt.models import MPTTModel
 
@@ -56,9 +57,6 @@ class Thread(models.Model):
     def get_posts(self):
         return Post.objects.filter(thread=self)
 
-    def get_absolute_url(self):
-        return reverse("thread-detail", kwargs={"pk": self.pk})
-
     def __str__(self):
         return f"Thread {self.title} by {self.author}"
 
@@ -66,16 +64,45 @@ class Thread(models.Model):
 class Post(models.Model):
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        parent_link=True,
+        related_name="children",
+    )
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def clean(self):
+        """
+        TODO this returns an error for the first post in a thread
+        Maybe hasattrib ??
+        :return:
+        """
+        if self.thread_id is not self.parent.thread_id:
+            raise ValidationError("Error: a post response must belong to thread")
+
+    @property
+    def votes(self):
+        """
+        TODO There might be more optimized queries
+        :return:
+        """
+        pos = Karma.objects.filter(post=self).filter(karma=True).count()
+        neg = Karma.objects.filter(post=self).filter(karma=False).count()
+        return pos - neg
+
     def __str__(self):
-        return f"Post by {self.author} for Thread {self.thread}"
+        return f"{self.content} Post by {self.author} for Thread {self.thread}"
 
 
 class Karma(models.Model):
+    class Meta:
+        unique_together = (("post", "author"),)
+
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     karma = models.BooleanField()

@@ -1,0 +1,11 @@
+<li>{{ post.content }}
+    {%if post.children %}
+        <ul>
+         {% for ch in post.children.get_queryset %}
+              {% with post=ch template_name="forum/tree_post.html" %}
+                   {% include "forum/post_detail.html" %}
+              {% endwith %}
+         {% endfor %}
+         </ul>
+    {% endif %}
+</li>

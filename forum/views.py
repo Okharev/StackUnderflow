@@ -1,17 +1,15 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, FormView
-from django.views.generic.detail import SingleObjectMixin
 from forum.forms import PostForm
 from forum.models import Thread, Post
 
 
-class ThreadListView(ListView):
-    model = Thread
-    paginate_by = 15
-
-
+# TODO A more semantically correct way to implement things would be to have a List and Create View with single mixins
+# but i'm too bad :(
+# from django.views.generic.detail import SingleObjectMixin
+"""
 class ThreadDisplay(DetailView):
     model = Thread
 
@@ -48,6 +46,40 @@ class ThreadDetail(View):
     def post(self, request, *args, **kwargs):
         view = ThreadPost.as_view()
         return view(request, *args, **kwargs)
+"""
+
+
+class ThreadListView(ListView):
+    model = Thread
+    paginate_by = 15
+
+
+class ThreadDetailView(View):
+    form_class = PostForm
+    initial = {"key": "value"}
+    template_name = "forum/thread_detail.html"
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        form.fields["parent"].queryset = Post.objects.filter(
+            thread=Thread.objects.get(id=self.kwargs.get("pk"))
+        )
+
+        return render(
+            request,
+            self.template_name,
+            {"form": form, "thread": Thread.objects.get(id=self.kwargs.get("pk"))},
+        )
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST or None)
+        form.instance.author = request.user
+        form.instance.thread = Thread.objects.get(id=self.kwargs.get("pk"))
+        if form.is_valid():
+            form.save()
+            return redirect("thread-list")
+
+        return render(request, self.template_name, {"form": form})
 
 
 class ThreadCreateView(CreateView):
@@ -64,7 +96,7 @@ class ThreadCreateView(CreateView):
 
 class ThreadDeleteView(DeleteView):
     model = Thread
-    success_url = reverse_lazy("thread-list")
+    success_url = "forum/thread_detail.html"
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -75,35 +107,3 @@ class ThreadDeleteView(DeleteView):
 
 class PostDetailView(DetailView):
     model = Post
-
-
-"""
-class PostCreateView(CreateView):
-    model = Post
-    fields = ["content", "thread"]
-
-    def get_success_url(self):
-        return reverse("thread-detail", args=(self.object.id,))
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        form.instance.thread = Thread.objects.get(pk=self.kwargs["thread_pk"])
-        return super().form_valid(form)
-
-
-class PostFormView(FormView):
-    template_name = 'forum/thread_form.html'
-    form_class = PostsForm
-
-    def get_success_url(self):
-        return reverse("thread-detail", args=(self.object.thread.id,))
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        form.instance.thread = Thread.objects.get(pk=self.kwargs["thread_pk"])
-        return super().form_valid(form)
-
-
-class PostDeleteView(DeleteView):
-    model = Post
-"""
