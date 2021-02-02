@@ -29,10 +29,6 @@ class Category(models.Model):
             f'<span style="background-color: #{self.hexcolor};">{self.name}</span>'
         )
 
-    @property
-    def rand_color(self):
-        return "{:06x}".format(random.randint(0, 0xFFFFFF))
-
     def __str__(self):
         return self.slug
 
@@ -52,6 +48,10 @@ class Thread(models.Model):
     @property
     def post_count(self):
         return Post.objects.filter(thread=self).count()
+
+    @property
+    def post_count_parent(self):
+        return Post.objects.filter(thread=self).filter(parent=True).count()
 
     @property
     def get_posts(self):
@@ -77,12 +77,10 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def clean(self):
-        """
-        TODO this returns an error for the first post in a thread
-        Maybe hasattrib ??
-        :return:
-        """
-        if self.thread.post_count != 0 and self.thread_id is not self.parent.thread_id:
+        if (
+            self.thread.post_count_parent != 0
+            and self.thread_id is not self.parent.thread_id
+        ):
             raise ValidationError("Error: a post response must belong to thread")
 
         super(Post, self).clean()

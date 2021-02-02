@@ -1,12 +1,16 @@
-<li>{{ post.content }}
-<li><p>{{ post.votes }}</p></li>
-    {%if post.children %}
-        <ul>----
-         {% for ch in post.children.get_queryset %}
-              {% with post=ch template_name="forum/tree_post.html" %}
-                   {% include "forum/post_detail.html" %}
-              {% endwith %}
-         {% endfor %}
-         </ul>----
-    {% endif %}
-</li>
+
+    <li>{{ post.content }} {{ post.votes }}
+        <a href="{% url 'karmaUp' post.id %}">Up</a>
+        <a href="{% url 'karmaDown' post.id %}">Down</a>
+        {% if post.children %}
+            <ul>
+            {% for child in post.children.get_queryset %}
+
+                {% with post=child template_name="forum/tree_post.html"  %}
+                    {% include "forum/tree_post.html" %}
+                {% endwith %}
+
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </li>

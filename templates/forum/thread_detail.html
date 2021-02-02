@@ -2,36 +2,39 @@
 
 {% block content %}
 
-<h1>{{ thread.title }}</h1>
-<ul>
-    <li>{{ thread.content }}</li>
-    <li>{{ thread.created_at|date }}</li>
+<h1>{{ thread.title }}</h1><hr>
+
+    <p>{{ thread.content }}</p>
+    <p>{{ thread.created_at|date }}</p>
 
     <ul>
         {% for category in thread.categories.all %}
-            <li>{{ category.name }}</li>
+            <li>{{ category.colored_name }}</li>
         {% endfor %}
     </ul>
 
+    {% if user.is_authenticated %}
+        <a href="{% url 'thread-delete' thread.id %}">delete</a>
+    {% endif %}
 
-    <li><a href="{% url 'thread-delete' thread.id %}">delete</a></li>
+    <hr>
 
-        <form method="post">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Save">
-        </form>
+    <ul>
+    {% for post in thread.get_posts.all %}
+        {% if not post.parent %}
 
-        <ul>---
-        {% for post in thread.get_posts %}
-            {% if not post.parent %}
-                <a href="{% url 'karmaUp' post.id %}">Up</a>
-                <a href="{% url 'karmaDown' post.id %}">Down</a>
-                {% include "forum/tree_post.html" %}
-            {% endif %}
-        {% endfor %}
-        </ul>---
+            {% include "forum/tree_post.html" %}
 
-</ul>
+        {% endif %}
+    {% endfor %}
+    </ul>
+
+    <hr>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
 
 {% endblock %}

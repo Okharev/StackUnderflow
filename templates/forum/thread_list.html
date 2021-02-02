@@ -3,7 +3,7 @@
 {% block content %}
 
     <h1>Threads</h1>
-    <ul>
+    <ol>
         {% for thread in thread_list %}
             <li>{{ thread.created_at|date }} - {{ thread.title }} - {{ thread.post_count }} <a
                     href="{% url 'thread-detail' thread.id %}">>>></a></li>
@@ -33,6 +33,6 @@
             </span>
             </div>
         {% endif %}
-    </ul>
+    </ol>
 
 {% endblock %}

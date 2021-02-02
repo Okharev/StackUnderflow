@@ -118,7 +118,6 @@ class KarmaUpvote(CreateView):
         form.instance.post = Post.objects.get(id=self.kwargs.get("pk"))
         form.instance.karma = True
         return super().form_valid(form)
-        # return reverse_lazy("thread-list")
 
 
 class KarmaDownvote(CreateView):
@@ -130,5 +129,4 @@ class KarmaDownvote(CreateView):
         form.instance.author = self.request.user
         form.instance.post = Post.objects.get(id=self.kwargs.get("pk"))
         form.instance.karma = False
-        super().form_valid(form)
-        # return reverse_lazy("thread-list")
+        return super().form_valid(form)
