@@ -82,8 +82,10 @@ class Post(models.Model):
         Maybe hasattrib ??
         :return:
         """
-        if self.thread_id is not self.parent.thread_id:
+        if self.thread.post_count != 0 and self.thread_id is not self.parent.thread_id:
             raise ValidationError("Error: a post response must belong to thread")
+
+        super(Post, self).clean()
 
     @property
     def votes(self):
