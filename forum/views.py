@@ -3,8 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, FormView
 from forum.forms import PostForm
-from forum.models import Thread, Post
-
+from forum.models import Thread, Post, Karma
 
 # TODO A more semantically correct way to implement things would be to have a List and Create View with single mixins
 # but i'm too bad :(
@@ -107,3 +106,29 @@ class ThreadDeleteView(DeleteView):
 
 class PostDetailView(DetailView):
     model = Post
+
+
+class KarmaUpvote(CreateView):
+    model = Karma
+    fields = []
+    success_url = reverse_lazy("thread-list")
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post = Post.objects.get(id=self.kwargs.get("pk"))
+        form.instance.karma = True
+        return super().form_valid(form)
+        # return reverse_lazy("thread-list")
+
+
+class KarmaDownvote(CreateView):
+    model = Karma
+    fields = []
+    success_url = reverse_lazy("thread-list")
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.post = Post.objects.get(id=self.kwargs.get("pk"))
+        form.instance.karma = False
+        super().form_valid(form)
+        # return reverse_lazy("thread-list")

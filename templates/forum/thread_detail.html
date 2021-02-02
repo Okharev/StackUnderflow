@@ -7,6 +7,13 @@
     <li>{{ thread.content }}</li>
     <li>{{ thread.created_at|date }}</li>
 
+    <ul>
+        {% for category in thread.categories.all %}
+            <li>{{ category.name }}</li>
+        {% endfor %}
+    </ul>
+
+
     <li><a href="{% url 'thread-delete' thread.id %}">delete</a></li>
 
         <form method="post">
@@ -15,13 +22,15 @@
             <input type="submit" value="Save">
         </form>
 
-        <ul>
+        <ul>---
         {% for post in thread.get_posts %}
             {% if not post.parent %}
-            {% include "forum/tree_post.html" %}
+                <a href="{% url 'karmaUp' post.id %}">Up</a>
+                <a href="{% url 'karmaDown' post.id %}">Down</a>
+                {% include "forum/tree_post.html" %}
             {% endif %}
         {% endfor %}
-        </ul>
+        </ul>---
 
 </ul>
 

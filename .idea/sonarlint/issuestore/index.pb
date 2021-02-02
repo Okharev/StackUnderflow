@@ -25,3 +25,11 @@ P
 forum/forms.py,7\1\7184b6a74e2bcccf311e361e075b54e48453fd5c
 [
 +forum/migrations/0002_auto_20210128_2100.py,e\9\e95486084f386070ff606fa7d04565ade2f652f2
+@
+requirements.txt,1\9\19359a61ae2446b51b549167b014da2fcf265768
+9
+	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+F
+StackUnderflow/urls.py,b\2\b2e38dea524727e7d9444bbb790eff4235f70f91
+N
+templates/forum/tree_post.html,8\6\86fada03b22719fcfbc22ffcb4475c6de7e40c1c
