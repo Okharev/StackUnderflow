@@ -57,6 +57,7 @@ class ThreadDetail(View):
         return view(request, *args, **kwargs)
 """
 
+
 class ThreadListView(ListView):
     model = Thread
     paginate_by = 2

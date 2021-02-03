@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.html import format_html
-from mptt.models import MPTTModel
 
 
 class Category(models.Model):
