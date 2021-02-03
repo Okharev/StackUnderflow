@@ -13,7 +13,8 @@
         {% endfor %}
     </ul>
 
-    {% if user.is_authenticated %}
+    {% if user == thread.author %}
+        <a href="{% url 'thread-update' thread.id %}">update</a>
         <a href="{% url 'thread-delete' thread.id %}">delete</a>
     {% endif %}
 

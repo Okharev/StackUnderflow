@@ -1,9 +1,17 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, ListView, DetailView, DeleteView, FormView
+from django.views.generic import (
+    CreateView,
+    ListView,
+    DetailView,
+    DeleteView,
+    UpdateView,
+)
 from forum.forms import PostForm
 from forum.models import Thread, Post, Karma
 
@@ -48,7 +56,6 @@ class ThreadDetail(View):
         view = ThreadPost.as_view()
         return view(request, *args, **kwargs)
 """
-
 
 class ThreadListView(ListView):
     model = Thread
@@ -95,19 +102,42 @@ class ThreadCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ThreadDeleteView(DeleteView):
+class ThreadUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
     model = Thread
-    success_url = "forum/thread_detail.html"
+    fields = ["title", "content", "categories"]
+    template_name_suffix = "_update_form"
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.object.author != self.request.user:
-            return redirect(self.success_url)
-        return super().post(request, *args, **kwargs)
+    def get_success_url(self):
+        return reverse("thread-detail", args=(self.object.id,))
+
+    def form_valid(self, form):
+        if form.instance.author == self.request.user:
+            return super().form_valid(form)
+
+    def test_func(self):
+        return self.request.user == Thread.objects.get(pk=self.kwargs.get("pk")).author
+
+
+class ThreadDeleteView(UserPassesTestMixin, LoginRequiredMixin, DeleteView):
+    model = Thread
+    success_url = reverse_lazy("thread-list")
+
+    def test_func(self):
+        return self.request.user == Thread.objects.get(pk=self.kwargs.get("pk")).author
 
 
 class PostDetailView(DetailView):
     model = Post
+
+
+class PostUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
+    model = Post
+    fields = ["content"]
+    template_name_suffix = "_update_form"
+    success_url = reverse_lazy("thread-list")
+
+    def test_func(self):
+        return self.request.user == Post.objects.get(pk=self.kwargs.get("pk")).author
 
 
 @login_required
@@ -130,3 +160,10 @@ def karma_downvote(request, pk):
         return redirect("thread-list")
 
     return redirect("thread-list")
+
+
+class UserCreateView(CreateView):
+    model = User
+    form_class = UserCreationForm
+    template_name = "registration/register.html"
+    success_url = "/forum"

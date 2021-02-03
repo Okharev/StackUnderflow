@@ -6,17 +6,17 @@ from .views import (
     ThreadCreateView,
     ThreadDeleteView,
     ThreadDetailView,
-    # PostDetailView,
-    # ThreadDisplay,
-    # ThreadDetail,
-    # ThreadPost,
+    PostUpdateView,
+    ThreadUpdateView,
 )
 
 urlpatterns = [
     path("", ThreadListView.as_view(), name="thread-list"),
     path("thread/<int:pk>", ThreadDetailView.as_view(), name="thread-detail"),
+    path("thread/update/<int:pk>", ThreadUpdateView.as_view(), name="thread-update"),
     path("thread/create", ThreadCreateView.as_view(), name="thread-create"),
     path("thread/delete/<int:pk>", ThreadDeleteView.as_view(), name="thread-delete"),
-    path("post/<int:pk>/karmaUp", views.karma_upvote, name="karmaUp"),
-    path("post/<int:pk>/karmaDown", views.karma_downvote, name="karmaDown"),
+    path("post/update/<int:pk>", PostUpdateView.as_view(), name="post-update"),
+    path("post/karmaUp/<int:pk>", views.karma_upvote, name="karmaUp"),
+    path("post/karmaDown/<int:pk>", views.karma_downvote, name="karmaDown"),
 ]
