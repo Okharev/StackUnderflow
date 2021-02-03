@@ -8,8 +8,8 @@ on:
 env:
   FAIL_LEVEL: WARNING
   ENV_TYPE: venv
-  DEP_PATH: app/requirements.txt
-  APP_PATH: app/
+  DEP_PATH: StackUnderflow/requirements.txt
+  APP_PATH: StackUnderflow/
 
 jobs:
   build:
