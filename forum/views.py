@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -50,7 +52,7 @@ class ThreadDetail(View):
 
 class ThreadListView(ListView):
     model = Thread
-    paginate_by = 15
+    paginate_by = 2
 
 
 class ThreadDetailView(View):
@@ -81,7 +83,7 @@ class ThreadDetailView(View):
         return render(request, self.template_name, {"form": form})
 
 
-class ThreadCreateView(CreateView):
+class ThreadCreateView(LoginRequiredMixin, CreateView):
     model = Thread
     fields = ["title", "content", "categories"]
 
@@ -108,25 +110,23 @@ class PostDetailView(DetailView):
     model = Post
 
 
-class KarmaUpvote(CreateView):
-    model = Karma
-    fields = []
-    success_url = reverse_lazy("thread-list")
+@login_required
+def karma_upvote(request, pk):
+    if request.method == "POST":
+        Karma.objects.create(
+            author=request.user, post=Post.objects.get(pk=pk), karma=True
+        )
+        return redirect("thread-list")
 
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        form.instance.post = Post.objects.get(id=self.kwargs.get("pk"))
-        form.instance.karma = True
-        return super().form_valid(form)
+    return redirect("thread-list")
 
 
-class KarmaDownvote(CreateView):
-    model = Karma
-    fields = []
-    success_url = reverse_lazy("thread-list")
+@login_required
+def karma_downvote(request, pk):
+    if request.method == "POST":
+        Karma.objects.create(
+            author=request.user, post=Post.objects.get(pk=pk), karma=False
+        )
+        return redirect("thread-list")
 
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        form.instance.post = Post.objects.get(id=self.kwargs.get("pk"))
-        form.instance.karma = False
-        return super().form_valid(form)
+    return redirect("thread-list")

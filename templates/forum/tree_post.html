@@ -1,7 +1,13 @@
 
-    <li>{{ post.content }} {{ post.votes }}
-        <a href="{% url 'karmaUp' post.id %}">Up</a>
-        <a href="{% url 'karmaDown' post.id %}">Down</a>
+    <li style="border-left: 1px black solid;">{{ post.content }} {{ post.votes }}
+        <form method="post" action="{% url "karmaUp" post.id %}">
+            {% csrf_token %}
+            <button type="submit">Upvote</button>
+        </form>
+        <form method="post" action="{% url "karmaUp" post.id %}">
+            {% csrf_token %}
+            <button type="submit">Downvote</button>
+        </form>
         {% if post.children %}
             <ul>
             {% for child in post.children.get_queryset %}
