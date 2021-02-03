@@ -4,7 +4,6 @@ black==20.8b1
 click==7.1.2
 Django==3.1.5
 django-js-asset==1.2.2
-django-mptt==0.11.0
 mypy-extensions==0.4.3
 pathspec==0.8.1
 pytz==2020.5

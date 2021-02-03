@@ -32,8 +32,6 @@ ALLOWED_HOSTS = []
 TAGGIT_CASE_INSENSITIVE = True
 
 INSTALLED_APPS = [
-    # "coverage",
-    "mptt",
     "forum.apps.ForumConfig",
     "django.contrib.admin",
     "django.contrib.auth",
