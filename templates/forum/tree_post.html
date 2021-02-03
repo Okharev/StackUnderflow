@@ -1,0 +1,35 @@
+
+    <li style="border-left: 1px black solid;">
+
+    {{ post.content }} {{ post.votes }}
+
+        {% if user == post.author %}
+        <a href="{% url 'post-update' post.id %}">update</a>
+
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url "karmaUp" post.id %}">
+            {% csrf_token %}
+            <button type="submit">Upvote</button>
+        </form>
+        <form method="post" action="{% url "karmaDown" post.id %}">
+            {% csrf_token %}
+            <button type="submit">Downvote</button>
+        </form>
+        {% endif %}
+
+        {% if post.children %}
+            <ul>
+
+            {% for child in post.children.get_queryset %}
+
+                {% with post=child template_name="forum/tree_post.html"  %}
+                    {% include "forum/tree_post.html" %}
+                {% endwith %}
+
+            {% endfor %}
+
+            </ul>
+        {% endif %}
+    </li>
