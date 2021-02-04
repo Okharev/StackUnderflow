@@ -8,6 +8,7 @@ from .views import (
     ThreadDetailView,
     PostUpdateView,
     ThreadUpdateView,
+    CategoryDetailView,
 )
 
 urlpatterns = [
@@ -16,6 +17,7 @@ urlpatterns = [
     path("thread/update/<int:pk>", ThreadUpdateView.as_view(), name="thread-update"),
     path("thread/create", ThreadCreateView.as_view(), name="thread-create"),
     path("thread/delete/<int:pk>", ThreadDeleteView.as_view(), name="thread-delete"),
+    path("category/<int:pk>", CategoryDetailView.as_view(), name="category-detail"),
     path("post/update/<int:pk>", PostUpdateView.as_view(), name="post-update"),
     path("post/karmaUp/<int:pk>", views.karma_upvote, name="karmaUp"),
     path("post/karmaDown/<int:pk>", views.karma_downvote, name="karmaDown"),

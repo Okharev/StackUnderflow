@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
@@ -13,7 +13,7 @@ from django.views.generic import (
     UpdateView,
 )
 from forum.forms import PostForm
-from forum.models import Thread, Post, Karma
+from forum.models import Thread, Post, Karma, Category
 
 # TODO A more semantically correct way to implement things would be to have a List and Create View with single mixins
 # but i'm too bad :(
@@ -168,3 +168,12 @@ class UserCreateView(CreateView):
     form_class = UserCreationForm
     template_name = "registration/register.html"
     success_url = "/forum"
+
+
+class UserDetailView(DetailView):
+    model = User
+    template_name = "registration/profile.html"
+
+
+class CategoryDetailView(DetailView):
+    model = Category

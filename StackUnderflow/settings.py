@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
+    "crispy_forms",
+    "crispy_tailwind",
     "forum.apps.ForumConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -124,3 +126,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+
+CRISPY_TEMPLATE_PACK = "tailwind"

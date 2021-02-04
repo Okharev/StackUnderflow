@@ -1,0 +1,10 @@
+{% extends 'forum/base.html' %}
+
+{% block content %}
+
+    <h1>{{ category.colored_name }}</h1>
+    <p>{{ category.slug }}</p>
+    <p>{{ category.url }}</p>
+    <p>{{ category.description }}</p>
+
+{% endblock %}
