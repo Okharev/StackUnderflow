@@ -60,7 +60,7 @@ class ThreadDetail(View):
 
 class ThreadListView(ListView):
     model = Thread
-    paginate_by = 2
+    paginate_by = 3
 
 
 class ThreadDetailView(View):
