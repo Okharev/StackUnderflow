@@ -6,6 +6,6 @@ from forum.models import Post, Thread
 
 
 class PostForm(forms.ModelForm):
-    class Meta:
-        model = Post
-        fields = ["parent", "content"]
+	class Meta:
+		model = Post
+		fields = ["parent", "content"]

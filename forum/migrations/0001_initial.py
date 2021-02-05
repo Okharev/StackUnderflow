@@ -7,179 +7,178 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
+	initial = True
 
-    initial = True
+	dependencies = [
+		migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+	]
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
-
-    operations = [
-        migrations.CreateModel(
-            name="Categorisation",
-            fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-            ],
-        ),
-        migrations.CreateModel(
-            name="Category",
-            fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("name", models.CharField(max_length=20)),
-                ("slug", models.SlugField(unique=True)),
-                ("description", models.TextField()),
-                ("url", models.URLField()),
-                (
-                    "hexcolor",
-                    models.CharField(
-                        default="ffffff",
-                        help_text="The color hex code without the '#'",
-                        max_length=7,
-                        validators=[
-                            django.core.validators.MinValueValidator("00000"),
-                            django.core.validators.MaxValueValidator("ffffff"),
-                        ],
-                    ),
-                ),
-            ],
-            options={
-                "verbose_name_plural": "Categories",
-            },
-        ),
-        migrations.CreateModel(
-            name="Thread",
-            fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("title", models.TextField()),
-                ("content", models.TextField()),
-                ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("updated_at", models.DateTimeField(auto_now=True)),
-                (
-                    "author",
-                    models.ForeignKey(
-                        help_text="The thread creator",
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to=settings.AUTH_USER_MODEL,
-                    ),
-                ),
-                (
-                    "categories",
-                    models.ManyToManyField(
-                        related_name="cat",
-                        through="forum.Categorisation",
-                        to="forum.Category",
-                    ),
-                ),
-            ],
-        ),
-        migrations.CreateModel(
-            name="Post",
-            fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "parent",
-                    models.ForeignKey(
-                        blank=True,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        parent_link=True,
-                        related_name="children",
-                        to="forum.post",
-                    ),
-                ),
-                ("content", models.TextField()),
-                ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("updated_at", models.DateTimeField(auto_now=True)),
-                (
-                    "author",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to=settings.AUTH_USER_MODEL,
-                    ),
-                ),
-                (
-                    "thread",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="forum.thread"
-                    ),
-                ),
-            ],
-        ),
-        migrations.AddField(
-            model_name="categorisation",
-            name="category",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="forum.category"
-            ),
-        ),
-        migrations.AddField(
-            model_name="categorisation",
-            name="thread",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="forum.thread"
-            ),
-        ),
-        migrations.CreateModel(
-            name="Karma",
-            fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("karma", models.BooleanField()),
-                (
-                    "author",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to=settings.AUTH_USER_MODEL,
-                    ),
-                ),
-                (
-                    "post",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="forum.post"
-                    ),
-                ),
-            ],
-            options={
-                "unique_together": {("post", "author")},
-            },
-        ),
-    ]
+	operations = [
+		migrations.CreateModel(
+			name="Categorisation",
+			fields=[
+				(
+					"id",
+					models.AutoField(
+						auto_created=True,
+						primary_key=True,
+						serialize=False,
+						verbose_name="ID",
+					),
+				),
+			],
+		),
+		migrations.CreateModel(
+			name="Category",
+			fields=[
+				(
+					"id",
+					models.AutoField(
+						auto_created=True,
+						primary_key=True,
+						serialize=False,
+						verbose_name="ID",
+					),
+				),
+				("name", models.CharField(max_length=20)),
+				("slug", models.SlugField(unique=True)),
+				("description", models.TextField()),
+				("url", models.URLField()),
+				(
+					"hexcolor",
+					models.CharField(
+						default="ffffff",
+						help_text="The color hex code without the '#'",
+						max_length=7,
+						validators=[
+							django.core.validators.MinValueValidator("00000"),
+							django.core.validators.MaxValueValidator("ffffff"),
+						],
+					),
+				),
+			],
+			options={
+				"verbose_name_plural": "Categories",
+			},
+		),
+		migrations.CreateModel(
+			name="Thread",
+			fields=[
+				(
+					"id",
+					models.AutoField(
+						auto_created=True,
+						primary_key=True,
+						serialize=False,
+						verbose_name="ID",
+					),
+				),
+				("title", models.TextField()),
+				("content", models.TextField()),
+				("created_at", models.DateTimeField(auto_now_add=True)),
+				("updated_at", models.DateTimeField(auto_now=True)),
+				(
+					"author",
+					models.ForeignKey(
+						help_text="The thread creator",
+						on_delete=django.db.models.deletion.CASCADE,
+						to=settings.AUTH_USER_MODEL,
+					),
+				),
+				(
+					"categories",
+					models.ManyToManyField(
+						related_name="cat",
+						through="forum.Categorisation",
+						to="forum.Category",
+					),
+				),
+			],
+		),
+		migrations.CreateModel(
+			name="Post",
+			fields=[
+				(
+					"id",
+					models.AutoField(
+						auto_created=True,
+						primary_key=True,
+						serialize=False,
+						verbose_name="ID",
+					),
+				),
+				(
+					"parent",
+					models.ForeignKey(
+						blank=True,
+						null=True,
+						on_delete=django.db.models.deletion.CASCADE,
+						parent_link=True,
+						related_name="children",
+						to="forum.post",
+					),
+				),
+				("content", models.TextField()),
+				("created_at", models.DateTimeField(auto_now_add=True)),
+				("updated_at", models.DateTimeField(auto_now=True)),
+				(
+					"author",
+					models.ForeignKey(
+						on_delete=django.db.models.deletion.CASCADE,
+						to=settings.AUTH_USER_MODEL,
+					),
+				),
+				(
+					"thread",
+					models.ForeignKey(
+						on_delete=django.db.models.deletion.CASCADE, to="forum.thread"
+					),
+				),
+			],
+		),
+		migrations.AddField(
+			model_name="categorisation",
+			name="category",
+			field=models.ForeignKey(
+				on_delete=django.db.models.deletion.CASCADE, to="forum.category"
+			),
+		),
+		migrations.AddField(
+			model_name="categorisation",
+			name="thread",
+			field=models.ForeignKey(
+				on_delete=django.db.models.deletion.CASCADE, to="forum.thread"
+			),
+		),
+		migrations.CreateModel(
+			name="Karma",
+			fields=[
+				(
+					"id",
+					models.AutoField(
+						auto_created=True,
+						primary_key=True,
+						serialize=False,
+						verbose_name="ID",
+					),
+				),
+				("karma", models.BooleanField()),
+				(
+					"author",
+					models.ForeignKey(
+						on_delete=django.db.models.deletion.CASCADE,
+						to=settings.AUTH_USER_MODEL,
+					),
+				),
+				(
+					"post",
+					models.ForeignKey(
+						on_delete=django.db.models.deletion.CASCADE, to="forum.post"
+					),
+				),
+			],
+			options={
+				"unique_together": {("post", "author")},
+			},
+		),
+	]
