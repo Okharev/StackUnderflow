@@ -55,7 +55,7 @@ class Thread(models.Model):
         return Post.objects.filter(thread=self)
 
     def __str__(self):
-        return f"Thread {self.title} by {self.author}"
+        return f"Thread {self.title} by {self.author} at {self.created_at}"
 
 
 class Post(models.Model):

@@ -1,11 +1,10 @@
 
-    <li style="border-left: 1px black solid;">
+    <li class="pl-5 border-l-2 border-green-600">
 
     {{ post.content }} {{ post.votes }}
 
         {% if user == post.author %}
         <a href="{% url 'post-update' post.id %}">update</a>
-
         {% endif %}
 
         {% if user.is_authenticated %}
@@ -33,3 +32,4 @@
             </ul>
         {% endif %}
     </li>
+
