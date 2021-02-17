@@ -13,13 +13,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from forum.views import UserCreateView
 from django.contrib import admin
+from django.shortcuts import render
 from django.urls import path, include
+from forum.views import UserCreateView
+from forum.views import UserDetailView
+
+
+def index(request):
+	return render(request, "index.html")
+
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("forum/", include("forum.urls")),
-    path("accounts/", include("django.contrib.auth.urls")),
-    path("accounts/register", UserCreateView.as_view()),
+	path("", index, name="home"),
+	path("admin/", admin.site.urls),
+	path("forum/", include("forum.urls"), name="forum"),
+	path("accounts/", include("django.contrib.auth.urls")),
+	path("accounts/<int:pk>", UserDetailView.as_view(), name="user-profile"),
+	path("accounts/register", UserCreateView.as_view()),
 ]

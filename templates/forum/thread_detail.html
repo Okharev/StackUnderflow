@@ -1,41 +1,268 @@
 {% extends 'forum/base.html' %}
+{% load tailwind_filters %}
 
 {% block content %}
 
-<h1>{{ thread.title }}</h1><hr>
+	<div class="flex items-center justify-between">
+		<h1 class="text-xl font-bold text-gray-700 md:text-2xl">{{ thread.title }}</h1>
+		<ul class="text-xl flex items-center font-bold md:text-2xl ">
+			{% for category in thread.categories.all %}
+				<a href="{% url "category-detail" category.id %}"
+				   class="inline-block rounded-full text-white bg-black hover:bg-gray-500 duration-300 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1 opacity-90 hover:opacity-100">
+					{{ category.name }}
+				</a>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="mt-6">
+		<div class="max-w-4xl px-10 py-6 bg-white rounded-lg shadow-lg">
+			<p>{{ thread.content }}</p>
+		</div>
+	</div>
 
-    <p>{{ thread.content }}</p>
-    <p>{{ thread.created_at|date }}</p>
+	<hr>
 
-    <ul>
-        {% for category in thread.categories.all %}
-            <li>{{ category.colored_name }}</li>
-        {% endfor %}
-    </ul>
+	<ul class="mt-10 max-w-4xl px-10 py-6 rounded-lg shadow-lg bg-white">
+		{% for post in thread.get_posts.all %}
+			{% if not post.parent %}
 
-    {% if user == thread.author %}
-        <a href="{% url 'thread-update' thread.id %}">update</a>
-        <a href="{% url 'thread-delete' thread.id %}">delete</a>
-    {% endif %}
+				{% include "forum/tree_post.html" %}
 
-    <hr>
+			{% endif %}
+		{% endfor %}
+	</ul>
 
-    <ul>
-    {% for post in thread.get_posts.all %}
-        {% if not post.parent %}
+	<div class="mt-10 max-w-4xl px-10 py-6 rounded-lg shadow-lg bg-white">
+		<!-- Comment 1 start -->
+		<details open class="relative" id="comment-1">
+			<a href="#comment-1" class="block absolute left-0 w-3 border-l-2 border-r-2 border-fuchsia-600">
+				<span class="sr-only">Jump to comment-1</span>
+			</a>
+			<summary class="relative cursor-pointer flex items-center">
+				<div class="flex items-center h-12 text-sm">
+					<div class="w-5 h-8 rounded">
+						<button type="button" class="block w-full p-0 appearance-none text-sm bg-white rounded">
+							<span aria-hidden="true">&#9650;</span>
+							<span class="absolute top-auto w-px h-px overflow-hidden">Vote up</span>
+						</button>
+						<button type="button" class="block w-full p-0 appearance-none text-sm bg-white rounded">
+							<span aria-hidden="true">&#9660;</span>
+							<span class="absolute top-auto w-px h-px overflow-hidden">Vote down</span>
+						</button>
+					</div>
+					<div class="ml-2">
+						<a href="#" class="font-bold no-underline hover:underline">someguy14</a>
+						<p class="m-0">
+							22 points &bull; 4 days ago
+						</p>
+					</div>
+				</div>
+			</summary>
 
-            {% include "forum/tree_post.html" %}
+			<div class="comment-body">
+				<p>
+					This is really great! I fully agree with what you wrote, and this is sure to help me out in the
+					future. Thank you for posting this.
+				</p>
+				<button type="button">Reply</button>
+				<button type="button">Flag</button>
+			</div>
 
-        {% endif %}
-    {% endfor %}
-    </ul>
+			<div class="ml-6">
+				<!-- Comment 2 start -->
+				<details open class="comment" id="comment-2">
+					<a href="#comment-2" class="comment-border-link">
+						<span class="sr-only">Jump to comment-2</span>
+					</a>
+					<summary>
+						<div class="comment-heading">
+							<div class="comment-voting">
+								<button type="button">
+									<span aria-hidden="true">&#9650;</span>
+									<span class="sr-only">Vote up</span>
+								</button>
+								<button type="button">
+									<span aria-hidden="true">&#9660;</span>
+									<span class="sr-only">Vote down</span>
+								</button>
+							</div>
+							<div class="comment-info">
+								<a href="#" class="comment-author">randomperson81</a>
+								<p class="m-0">
+									4 points &bull; 3 days ago
+								</p>
+							</div>
+						</div>
+					</summary>
 
-    <hr>
+					<div class="comment-body">
+						<p>
+							Took the words right out of my mouth!
+						</p>
+						<button type="button">Reply</button>
+						<button type="button">Flag</button>
+					</div>
+				</details>
+				<!-- Comment 2 end -->
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Save">
-    </form>
+				<!-- Comment 3 start -->
+				<details open class="comment" id="comment-3">
+					<a href="#comment-3" class="comment-border-link">
+						<span class="sr-only">Jump to comment-3</span>
+					</a>
+					<summary>
+						<div class="comment-heading">
+							<div class="comment-voting">
+								<button type="button">
+									<span aria-hidden="true">&#9650;</span>
+									<span class="sr-only">Vote up</span>
+								</button>
+								<button type="button">
+									<span aria-hidden="true">&#9660;</span>
+									<span class="sr-only">Vote down</span>
+								</button>
+							</div>
+							<div class="comment-info">
+								<a href="#" class="comment-author">2edgy4u</a>
+								<p class="m-0">
+									-19 points &bull; 3 days ago
+								</p>
+							</div>
+						</div>
+					</summary>
+
+					<div class="comment-body">
+						<p>
+							Wow, are you serious? You have some pretty low standards to be able to enjoy this. Good for
+							you I guess, but you should honestly stop making these embarrassing comments.
+						</p>
+						<button type="button">Reply</button>
+						<button type="button">Flag</button>
+					</div>
+
+					<div class="ml-5">
+						<!-- Comment 4 start -->
+						<details open class="comment" id="comment-4">
+							<a href="#comment-4" class="comment-border-link">
+								<span class="sr-only">Jump to comment-4</span>
+							</a>
+							<summary>
+								<div class="comment-heading">
+									<div class="comment-voting">
+										<button type="button">
+											<span aria-hidden="true">&#9650;</span>
+											<span class="sr-only">Vote up</span>
+										</button>
+										<button type="button">
+											<span aria-hidden="true">&#9660;</span>
+											<span class="sr-only">Vote down</span>
+										</button>
+									</div>
+									<div class="comment-info">
+										<a href="#" class="comment-author">modpowertrip</a>
+										<p class="m-0">
+											9 points &bull; 2 days ago
+										</p>
+									</div>
+								</div>
+							</summary>
+
+							<div class="comment-body">
+								<p>
+									You are breaking <a href="#rule-687">Rule #687</a> with that comment. Please avoid
+									posting like this in the future, or I will ban you.
+								</p>
+								<button type="button">Reply</button>
+								<button type="button">Flag</button>
+							</div>
+						</details>
+						<!-- Comment 4 end -->
+
+						<!-- Comment 5 start -->
+						<details open class="comment" id="comment-5">
+							<a href="#comment-5" class="comment-border-link">
+								<span class="sr-only">Jump to comment-5</span>
+							</a>
+							<summary>
+								<div class="comment-heading">
+									<div class="comment-voting">
+										<button type="button">
+											<span aria-hidden="true">&#9650;</span>
+											<span class="sr-only">Vote up</span>
+										</button>
+										<button type="button">
+											<span aria-hidden="true">&#9660;</span>
+											<span class="sr-only">Vote down</span>
+										</button>
+									</div>
+									<div class="comment-info">
+										<a href="#" class="comment-author">imemespam</a>
+										<p class="m-0">
+											3 points &bull; 2 days ago
+										</p>
+									</div>
+								</div>
+							</summary>
+
+							<div class="comment-body">
+								<p>
+									Well, that's just like your opinion man.
+								</p>
+								<button type="button">Reply</button>
+								<button type="button">Flag</button>
+							</div>
+						</details>
+						<!-- Comment 5 end -->
+
+						<!-- Comment 6 start -->
+						<details open class="comment" id="comment-6">
+							<a href="#comment-6" class="comment-border-link">
+								<span class="sr-only">Jump to comment-6</span>
+							</a>
+							<summary>
+								<div class="comment-heading">
+									<div class="comment-voting">
+										<button type="button">
+											<span aria-hidden="true">&#9650;</span>
+											<span class="sr-only">Vote up</span>
+										</button>
+										<button type="button">
+											<span aria-hidden="true">&#9660;</span>
+											<span class="sr-only">Vote down</span>
+										</button>
+									</div>
+									<div class="comment-info">
+										<a href="#" class="comment-author">lukerbro57</a>
+										<p class="m-0">
+											0 points &bull; 2 days ago
+										</p>
+									</div>
+								</div>
+							</summary>
+
+							<div class="comment-body">
+								<p>
+									Lol I agree with you.
+								</p>
+								<button type="button">Reply</button>
+								<button type="button">Flag</button>
+							</div>
+						</details>
+						<!-- Comment 6 end -->
+
+						<a href="#load-more">Load more replies</a>
+					</div>
+				</details>
+				<!-- Comment 3 end -->
+			</div>
+		</details>
+		<!-- Comment 1 end -->
+	</div>
+
+	<form method="post">
+		{% csrf_token %}
+		{{ form|crispy }}
+		<input type="submit" value="Save">
+	</form>
 
 {% endblock %}

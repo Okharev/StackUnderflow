@@ -1,35 +1,42 @@
+<li class="pl-5 border-l-2 border-green-600">
 
-    <li style="border-left: 1px black solid;">
+<div class="mb-5">
+	<div class="flex flex-start items-center space-x-4">
+		<p>{{ post.votes }}</p>
+		<p>{{ post.content }}</p>
+	</div>
 
-    {{ post.content }} {{ post.votes }}
 
-        {% if user == post.author %}
-        <a href="{% url 'post-update' post.id %}">update</a>
+	<div class="flex flex-start items-center space-x-4">
+		{% if user == post.author %}
+		<a href="{% url 'post-update' post.id %}" class="bg-gray-500 px-2 rounded-lg">update</a>
+		{% endif %}
+			{% if user.is_authenticated %}
+		<form method="post" action="{% url "karmaUp" post.id %}">
+			{% csrf_token %}
+			<button type="submit" class="bg-gray-500 px-2 rounded-lg">Upvote</button>
+		</form>
+		<form method="post" action="{% url "karmaDown" post.id %}">
+			{% csrf_token %}
+			<button type="submit" class="bg-gray-500 px-2 rounded-lg">Downvote</button>
+		</form>
+	{% endif %}
+	</div>
+</div>
 
-        {% endif %}
 
-        {% if user.is_authenticated %}
-        <form method="post" action="{% url "karmaUp" post.id %}">
-            {% csrf_token %}
-            <button type="submit">Upvote</button>
-        </form>
-        <form method="post" action="{% url "karmaDown" post.id %}">
-            {% csrf_token %}
-            <button type="submit">Downvote</button>
-        </form>
-        {% endif %}
+	{% if post.children %}
+		<ul>
 
-        {% if post.children %}
-            <ul>
+			{% for child in post.children.get_queryset %}
 
-            {% for child in post.children.get_queryset %}
+				{% with post=child template_name="forum/tree_post.html" %}
+					{% include "forum/tree_post.html" %}
+				{% endwith %}
 
-                {% with post=child template_name="forum/tree_post.html"  %}
-                    {% include "forum/tree_post.html" %}
-                {% endwith %}
+			{% endfor %}
 
-            {% endfor %}
+		</ul>
+	{% endif %}
+</li>
 
-            </ul>
-        {% endif %}
-    </li>
