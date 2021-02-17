@@ -1,21 +1,29 @@
 <li class="pl-5 border-l-2 border-green-600">
 
-	{{ post.content }} {{ post.votes }}
+<div class="mb-5">
+	<div class="flex flex-start items-center space-x-4">
+		<p>{{ post.votes }}</p>
+		<p>{{ post.content }}</p>
+	</div>
 
-	{% if user == post.author %}
-		<a href="{% url 'post-update' post.id %}">update</a>
-	{% endif %}
 
-	{% if user.is_authenticated %}
+	<div class="flex flex-start items-center space-x-4">
+		{% if user == post.author %}
+		<a href="{% url 'post-update' post.id %}" class="bg-gray-500 px-2 rounded-lg">update</a>
+		{% endif %}
+			{% if user.is_authenticated %}
 		<form method="post" action="{% url "karmaUp" post.id %}">
 			{% csrf_token %}
-			<button type="submit">Upvote</button>
+			<button type="submit" class="bg-gray-500 px-2 rounded-lg">Upvote</button>
 		</form>
 		<form method="post" action="{% url "karmaDown" post.id %}">
 			{% csrf_token %}
-			<button type="submit">Downvote</button>
+			<button type="submit" class="bg-gray-500 px-2 rounded-lg">Downvote</button>
 		</form>
 	{% endif %}
+	</div>
+</div>
+
 
 	{% if post.children %}
 		<ul>

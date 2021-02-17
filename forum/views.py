@@ -12,6 +12,7 @@ from django.views.generic import (
 	DeleteView,
 	UpdateView,
 )
+
 from forum.forms import PostForm
 from forum.models import Thread, Post, Karma, Category
 

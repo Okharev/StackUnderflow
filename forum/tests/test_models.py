@@ -1,5 +1,5 @@
-from django.test import TestCase
 import factory
+from django.test import TestCase
 from factory.django import DjangoModelFactory
 
 from forum.models import Category

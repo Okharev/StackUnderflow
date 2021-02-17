@@ -22,7 +22,7 @@
 
 	<hr>
 
-	<ul>
+	<ul class="mt-10 max-w-4xl px-10 py-6 rounded-lg shadow-lg bg-white">
 		{% for post in thread.get_posts.all %}
 			{% if not post.parent %}
 
@@ -32,26 +32,26 @@
 		{% endfor %}
 	</ul>
 
-	<div class="comment-thread">
+	<div class="mt-10 max-w-4xl px-10 py-6 rounded-lg shadow-lg bg-white">
 		<!-- Comment 1 start -->
-		<details open class="comment" id="comment-1">
-			<a href="#comment-1" class="comment-border-link">
+		<details open class="relative" id="comment-1">
+			<a href="#comment-1" class="block absolute left-0 w-3 border-l-2 border-r-2 border-fuchsia-600">
 				<span class="sr-only">Jump to comment-1</span>
 			</a>
-			<summary>
-				<div class="comment-heading">
-					<div class="comment-voting">
-						<button type="button">
+			<summary class="relative cursor-pointer flex items-center">
+				<div class="flex items-center h-12 text-sm">
+					<div class="w-5 h-8 rounded">
+						<button type="button" class="block w-full p-0 appearance-none text-sm bg-white rounded">
 							<span aria-hidden="true">&#9650;</span>
-							<span class="sr-only">Vote up</span>
+							<span class="absolute top-auto w-px h-px overflow-hidden">Vote up</span>
 						</button>
-						<button type="button">
+						<button type="button" class="block w-full p-0 appearance-none text-sm bg-white rounded">
 							<span aria-hidden="true">&#9660;</span>
-							<span class="sr-only">Vote down</span>
+							<span class="absolute top-auto w-px h-px overflow-hidden">Vote down</span>
 						</button>
 					</div>
-					<div class="comment-info">
-						<a href="#" class="comment-author">someguy14</a>
+					<div class="ml-2">
+						<a href="#" class="font-bold no-underline hover:underline">someguy14</a>
 						<p class="m-0">
 							22 points &bull; 4 days ago
 						</p>
@@ -68,7 +68,7 @@
 				<button type="button">Flag</button>
 			</div>
 
-			<div class="replies">
+			<div class="ml-6">
 				<!-- Comment 2 start -->
 				<details open class="comment" id="comment-2">
 					<a href="#comment-2" class="comment-border-link">
@@ -140,7 +140,7 @@
 						<button type="button">Flag</button>
 					</div>
 
-					<div class="replies">
+					<div class="ml-5">
 						<!-- Comment 4 start -->
 						<details open class="comment" id="comment-4">
 							<a href="#comment-4" class="comment-border-link">

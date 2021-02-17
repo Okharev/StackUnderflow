@@ -6,5 +6,6 @@ from .models import Post, Category, Thread, Karma
     list_display = ("colored_name", "slug", "url")
 
 
-admin.site.register(Category, CategoryAdmin)"""
+admin.site.register(Category, CategoryAdmin)
+"""
 admin.site.register([Thread, Karma, Post, Category])

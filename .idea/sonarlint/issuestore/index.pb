@@ -31,3 +31,21 @@ I
 templates/forum/base.html,1\6\1659a663ed49f9400c877bfe2fc4061aef8fc67d
 O
 templates/forum/karma_form.html,f\7\f7ef7f5b134ecbb1c69957ae3db4ac04d2f72c15
+=
+forum/apps.py,b\1\b125c835b224efe7427c20b70ef435b7f9a4da5e
+Q
+!forum/templatetags/custom_tags.py,0\f\0fddac906427840eaae67338602545597aa874d1
+P
+ forum/migrations/0001_initial.py,2\3\238e1d39e72dbeb0557cbf325550504189b03ce9
+F
+StackUnderflow/wsgi.py,b\e\bece58be3bbc39a9c9ae21ab7ba8213615eecef5
+T
+$templates/forum/category_detail.html,5\0\5058a96d10e29dae8d07de10b1b620befe0a70c7
+U
+%templates/forum/post_update_form.html,6\0\606e3acca5dc55804f88491af2b9cf13a2b2bfa1
+Q
+!templates/registration/login.html,7\b\7bddf72c7b5006bedb31206aeb760a16166f7b95
+S
+#templates/registration/profile.html,9\e\9e953086c47201596f994e3c0144ca272f69d8eb
+T
+$templates/registration/register.html,9\a\9a8cb63b5e2ad027eb23c1322c0a510854d3b016
