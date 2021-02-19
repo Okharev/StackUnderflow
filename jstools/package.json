@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tailwind build ../static/css/tailwind.css -o ../static/css/style.css && cleancss -o ../static/css/style.min.css ../static/css/style.css"
+	"build": "tailwind build ../static/css/tailwind.css -o ../static/css/style.css && cleancss -o ../static/css/style.min.css ../static/css/style.css"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "autoprefixer": "^10.2.4",
-    "clean-css-cli": "^4.3.0",
-    "tailwindcss": "^2.0.2"
+	"@tailwindcss/typography": "^0.4.0",
+	"autoprefixer": "^10.2.4",
+	"clean-css-cli": "^4.3.0",
+	"tailwindcss": "^2.0.2",
+	"tailwindcss-typography": "^3.1.0"
   }
 }

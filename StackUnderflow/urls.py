@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.shortcuts import render
 from django.urls import path, include
+
 from forum.views import UserCreateView
 from forum.views import UserDetailView
 
@@ -30,5 +31,5 @@ urlpatterns = [
 	path("forum/", include("forum.urls"), name="forum"),
 	path("accounts/", include("django.contrib.auth.urls")),
 	path("accounts/<int:pk>", UserDetailView.as_view(), name="user-profile"),
-	path("accounts/register", UserCreateView.as_view()),
+	path("accounts/register", UserCreateView.as_view(), name="user-register"),
 ]

@@ -49,3 +49,7 @@ S
 #templates/registration/profile.html,9\e\9e953086c47201596f994e3c0144ca272f69d8eb
 T
 $templates/registration/register.html,9\a\9a8cb63b5e2ad027eb23c1322c0a510854d3b016
+O
+locale/fr/LC_MESSAGES/django.po,1\8\184210e0118875d9d1d2e443e05b19670d37aee4
+O
+locale/fr/LC_MESSAGES/django.mo,6\c\6ca5af2ae2f76a62189e5ecf1d715eaa5f58a8fe
