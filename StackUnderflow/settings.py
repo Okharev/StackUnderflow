@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 
+from django.utils.translation import gettext_lazy as _
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
 	"crispy_forms",
 	"crispy_tailwind",
+	'django.contrib.humanize',
 	"forum.apps.ForumConfig",
 	"django.contrib.admin",
 	"django.contrib.auth",
@@ -44,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
 	"django.middleware.security.SecurityMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
+	"django.middleware.locale.LocaleMiddleware",
 	"django.middleware.common.CommonMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -124,3 +128,9 @@ STATICFILES_DIRS = [
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 
 CRISPY_TEMPLATE_PACK = "tailwind"
+
+LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
+LANGUAGES = (
+	("en", ("English")),
+	("fr", _("French")),
+)

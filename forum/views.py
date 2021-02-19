@@ -6,11 +6,12 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import (
-	CreateView,
-	ListView,
-	DetailView,
-	DeleteView,
-	UpdateView,
+    CreateView,
+    ListView,
+    DetailView,
+    DeleteView,
+    UpdateView,
+    TemplateView,
 )
 
 from forum.forms import PostForm
@@ -64,6 +65,15 @@ class ThreadListView(ListView):
 	paginate_by = 3
 
 
+class BaseView(TemplateView):
+	template_name = "forum/categories.html"
+
+	def get_context_data(self, *args, **kwargs):
+		context = super(BaseView, self).get_context_data(**kwargs)
+		context["categories"] = Category.objects.all()
+		return context
+
+
 class ThreadDetailView(View):
 	form_class = PostForm
 	initial = {"key": "value"}
@@ -87,7 +97,7 @@ class ThreadDetailView(View):
 		form.instance.thread = Thread.objects.get(id=self.kwargs.get("pk"))
 		if form.is_valid():
 			form.save()
-			return redirect("thread-list")
+			return redirect("thread-detail", pk=self.kwargs.get("pk"))
 
 		return render(request, self.template_name, {"form": form})
 
@@ -136,7 +146,9 @@ class PostUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
 	model = Post
 	fields = ["content"]
 	template_name_suffix = "_update_form"
-	success_url = reverse_lazy("thread-list")
+
+	def get_success_url(self):
+		return reverse("thread-detail", args=(self.object.id,))
 
 	def test_func(self):
 		return self.request.user == Post.objects.get(pk=self.kwargs.get("pk")).author
@@ -145,10 +157,11 @@ class PostUpdateView(UserPassesTestMixin, LoginRequiredMixin, UpdateView):
 @login_required
 def karma_upvote(request, pk):
 	if request.method == "POST":
-		Karma.objects.create(
-			author=request.user, post=Post.objects.get(pk=pk), karma=True
+		post = Post.objects.get(pk=pk)
+		Karma.objects.update_or_create(
+			author=request.user, post=post, defaults={"karma": "True"}
 		)
-		return redirect("thread-list")
+		return redirect("thread-detail", pk=post.thread_id)
 
 	return redirect("thread-list")
 
@@ -156,10 +169,11 @@ def karma_upvote(request, pk):
 @login_required
 def karma_downvote(request, pk):
 	if request.method == "POST":
-		Karma.objects.create(
-			author=request.user, post=Post.objects.get(pk=pk), karma=False
+		post = Post.objects.get(pk=pk)
+		Karma.objects.update_or_create(
+			author=request.user, post=post, defaults={"karma": "False"}
 		)
-		return redirect("thread-list")
+		return redirect("thread-detail", pk=post.thread_id)
 
 	return redirect("thread-list")
 

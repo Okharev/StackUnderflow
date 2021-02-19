@@ -1,11 +1,16 @@
 {% extends 'forum/base.html' %}
 {% load tailwind_filters %}
+{% load custom_tags %}
 
 {% block content %}
-
+	supports Markdown !
 	<form method="post">{% csrf_token %}
-		{{ form|crispy }}
-		<input type="submit" value="Save">
+		{{ form.title|as_crispy_field }}
+		{{ form.content|as_crispy_field }}
+		{{ form.categories|add_class:'bg-white focus:outline-none border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal text-gray-700' }}
+		<!-- bg-white focus:outline-none border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal text-gray-700 -->
+		<input type="submit" value="Save"
+		       class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
 	</form>
 
 {% endblock %}

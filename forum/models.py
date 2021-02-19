@@ -1,8 +1,18 @@
 from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.html import format_html
+
+"""
+class UserMethods(User):
+	def has_voted(self):
+		pass
+
+	class Meta:
+		proxy = True
+"""
 
 
 class Category(models.Model):
@@ -39,7 +49,7 @@ class Thread(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	categories = models.ManyToManyField(
-		Category, through="Categorisation", related_name="cat"
+		Category, through="Categorisation", related_name="threads"
 	)
 
 	@property
@@ -92,8 +102,15 @@ class Post(models.Model):
 		neg = Karma.objects.filter(post=self).filter(karma=False).count()
 		return pos - neg
 
+	def has_voted(self, user):
+		return (
+			True
+			if Karma.objects.filter(post=self).filter(author=user).count() == 1
+			else False
+		)
+
 	def __str__(self):
-		return f"{self.content} Post by {self.author} for Thread {self.thread}"
+		return f"{self.content} Post by {self.author} for Thread {self.thread} "
 
 
 class Karma(models.Model):

@@ -1,0 +1,9 @@
+<ul>
+	{% for category in categories %}
+
+		<li><a href="{% url "category-detail" category.id %}"
+		       class="text-gray-700 font-bold mx-1 hover:text-gray-600 hover:underline">-
+			{{ category.name }}</a></li>
+
+	{% endfor %}
+</ul>

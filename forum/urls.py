@@ -2,13 +2,13 @@ from django.urls import path
 
 from . import views
 from .views import (
-	ThreadListView,
-	ThreadCreateView,
-	ThreadDeleteView,
-	ThreadDetailView,
-	PostUpdateView,
-	ThreadUpdateView,
-	CategoryDetailView,
+    ThreadListView,
+    ThreadCreateView,
+    ThreadDeleteView,
+    ThreadDetailView,
+    PostUpdateView,
+    ThreadUpdateView,
+    CategoryDetailView,
 )
 
 urlpatterns = [
